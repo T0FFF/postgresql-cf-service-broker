@@ -52,11 +52,11 @@ public class BrokerConfiguration {
     @Value("${MASTER_JDBC_URL}")
     private String jdbcUrl;
 
-    @Value("${service_id}")
-    private String serviceId;
-
-    @Value("${plan_id}")
-    private String planId;
+//	@Value("${service_id}")
+//	private String serviceId;
+//
+//	@Value("${plan_id}")
+//	private String planId;
 
     @Bean
     public JdbcTemplate jdbcTemplate(){
@@ -72,7 +72,10 @@ public class BrokerConfiguration {
 
     @Bean
     public Catalog catalog() throws IOException {
-        ServiceDefinition serviceDefinition = new ServiceDefinition(serviceId, serviceId, "PostgreSQL databases on demand",
+        ServiceDefinition serviceDefinition = new ServiceDefinition(
+				getEnvOrDefault("SERVICE_ID","postgresql-service-broker"), //env variable
+				getEnvOrDefault("SERVICE_NAME","postgresql"), //env variable
+				getEnvOrDefault("SERVICE_MARKETPLACE_DESCRIPTION","PostgreSQL databases on demand."),
                 true, false, getPlans(), getTags(), getServiceDefinitionMetadata(), Arrays.asList("syslog_drain"), null);
         return new Catalog(Arrays.asList(serviceDefinition));
     }
@@ -83,18 +86,19 @@ public class BrokerConfiguration {
 
     private static Map<String, Object> getServiceDefinitionMetadata() {
         Map<String, Object> sdMetadata = new HashMap<>();
-        sdMetadata.put("displayName", "PostgreSQL");
+        sdMetadata.put("displayName", getEnvOrDefault("SERVICE_MARKETPLACE_LABEL","PostgreSQL"));
         sdMetadata.put("imageUrl", "https://wiki.postgresql.org/images/3/30/PostgreSQL_logo.3colors.120x120.png");
         sdMetadata.put("longDescription", "Provisioning a service instance creates a PostgreSQL database. Binding applications to the instance creates unique credentials for each application to access the database.");
         sdMetadata.put("providerDisplayName", "Open Source, Pivotal Platform Architects");
-        sdMetadata.put("documentationUrl", "https://github.com/avasseur-pivotal/postgresql-cf-service-broker");
-        sdMetadata.put("supportUrl", "https://github.com/avasseur-pivotal/postgresql-cf-service-broker/issues");
+        sdMetadata.put("documentationUrl", "https://www.postgresql.org/?cm_sp=IBMCode-_-run-gitlab-kubernetes-_-included_components-_-postgresql");
+        sdMetadata.put("supportUrl", "https://www.postgresql.org/support/");
         return sdMetadata;
     }
 
     private List<Plan> getPlans() {
-        Plan basic = new Plan(planId, planId,
-                "A single database on a shared instance", getBasicPlanMetadata(), true);
+        Plan basic = new Plan(getEnvOrDefault("SERVICE_PLAN_ID","postgresql-plan"), 
+        		"Default",
+                "This is a default PostgreSQL plan.  All services are created equally.", getBasicPlanMetadata(), true);
         return Arrays.asList(basic);
     }
 
@@ -105,6 +109,16 @@ public class BrokerConfiguration {
     }
 
     private static List<String> getBasicPlanBullets() {
-        return Arrays.asList("Single database", "Shared instance");
+        return Arrays.asList("HA database", "Shared instance");
     }
+    
+	private static String getEnvOrDefault(final String variable, final String defaultValue){
+		String value = System.getenv(variable);
+		if(value != null){
+			return value;
+		}
+		else{
+			return defaultValue;
+		}
+	}
 }
