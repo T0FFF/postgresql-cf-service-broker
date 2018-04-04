@@ -6,7 +6,15 @@ buildpack: java_buildpack_offline
 env:
   SPRING_PROFILES_ACTIVE: cloud
   security.user.password: password
+  SECURITY_USER_NAME: admin
+  SECURITY_USER_PASSWORD: password
   MASTER_JDBC_URL: jdbc:postgresql://10.0.18.14:5432/sandbox?user=pgadmin&password=password
+  SERVICE_ID: postgres-cluster-service-broker
+  SERVICE_NAME: postgres-cluster
+  SERVICE_PLAN_ID: postgres-cluster-plan
+  SERVICE_MARKETPLACE_LABEL: "PostgreSQL"
+  SERVICE_MARKETPLACE_DESCRIPTION: "[Cluster] A PostgreSQL database on demand."
+
 applications:
-- name: ksb-postgresql
+- name: postgresql-docker-broker
   path: target/postgresql-cf-service-broker-3.0.1-SNAPSHOT.jar
