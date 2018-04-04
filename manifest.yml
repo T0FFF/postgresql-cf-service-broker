@@ -5,7 +5,8 @@ memory: 512M
 buildpack: java_buildpack_offline
 env:
   SPRING_PROFILES_ACTIVE: cloud
-  security.user.password: password
+  spring.security.user.name: admin1
+  security.user.password: password1
   SECURITY_USER_NAME: admin
   SECURITY_USER_PASSWORD: password
   MASTER_JDBC_URL: jdbc:postgresql://10.0.18.14:5432/sandbox?user=pgadmin&password=password
