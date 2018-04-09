@@ -89,15 +89,15 @@ public class BrokerConfiguration {
         sdMetadata.put("displayName", getEnvOrDefault("SERVICE_MARKETPLACE_LABEL","PostgreSQL"));
         sdMetadata.put("imageUrl", "https://wiki.postgresql.org/images/3/30/PostgreSQL_logo.3colors.120x120.png");
         sdMetadata.put("longDescription", "Provisioning a service instance creates a PostgreSQL database. Binding applications to the instance creates unique credentials for each application to access the database.");
-        sdMetadata.put("providerDisplayName", "Open Source, Pivotal Platform Architects");
+        sdMetadata.put("providerDisplayName", getEnvOrDefault("SERVICE_PROVIDER_DISPLAY_NAME","Open Source, Orange Cloud Foundry Platform"));
         sdMetadata.put("documentationUrl", "https://www.postgresql.org/?cm_sp=IBMCode-_-run-gitlab-kubernetes-_-included_components-_-postgresql");
         sdMetadata.put("supportUrl", "https://www.postgresql.org/support/");
         return sdMetadata;
     }
 
     private List<Plan> getPlans() {
-        Plan basic = new Plan(getEnvOrDefault("SERVICE_PLAN_ID","postgresql-plan"), 
-        		"Default",
+        Plan basic = new Plan(getEnvOrDefault("SERVICE_PLAN_ID","postgresql-plan"),
+        		getEnvOrDefault("SERVICE_PLAN_NAME","Default"),
                 "This is a default PostgreSQL plan.  All services are created equally.", getBasicPlanMetadata(), true);
         return Arrays.asList(basic);
     }

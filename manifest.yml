@@ -13,9 +13,11 @@ env:
   SERVICE_ID: postgres-cluster-service-broker
   SERVICE_NAME: postgres-cluster
   SERVICE_PLAN_ID: postgres-cluster-plan
+  SERVICE_PLAN_NAME: Default
   SERVICE_MARKETPLACE_LABEL: "PostgreSQL"
   SERVICE_MARKETPLACE_DESCRIPTION: "[Cluster] A PostgreSQL database on demand."
+  SERVICE_PROVIDER_DISPLAY_NAME: "Open Source, Orange Cloud Foundry Platform"
 
 applications:
 - name: postgresql-docker-broker
-  path: target/postgresql-cf-service-broker-3.0.1-SNAPSHOT.jar
+  path: target/postgresql-cf-service-broker-3.0.2-SNAPSHOT.jar
