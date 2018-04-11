@@ -86,10 +86,10 @@ public class PostgreSQLServiceInstanceService implements ServiceInstanceService 
             postgresDB.deleteRole(serviceInstanceId);
 
         } catch (SQLException e) {
-            logger.info("Error while deleting service instance '" + serviceInstanceId + "'", e);
+            logger.error("Error while deleting service instance '" + serviceInstanceId + "'", e);
 
         } catch (Exception e){
-            logger.info("Error while deleting service instance '" + serviceInstanceId + "'", e);
+        	logger.error("Error while deleting service instance '" + serviceInstanceId + "'", e);
             throw new ServiceBrokerException(e);
         }
         return new DeleteServiceInstanceResponse();

@@ -25,8 +25,6 @@ import org.springframework.cloud.servicebroker.exception.ServiceInstanceBindingE
 import org.springframework.cloud.servicebroker.model.*;
 import org.springframework.cloud.servicebroker.service.ServiceInstanceBindingService;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,13 +46,14 @@ public class PostgreSQLServiceInstanceBindingService implements ServiceInstanceB
 
         String bindingId = createServiceInstanceBindingRequest.getBindingId();
         String serviceInstanceId = createServiceInstanceBindingRequest.getServiceInstanceId();
-        String appGuid = createServiceInstanceBindingRequest.getBoundAppGuid();
+        //String appGuid = createServiceInstanceBindingRequest.getBoundAppGuid();
 
         try {
         	//postgresDB.createUserInRoleForInstance(serviceInstanceId, bindingId);	
             String dbURL = postgresDB.bindRoleToDatabase(serviceInstanceId, bindingId);
             Map<String, Object> credentials = new HashMap<String, Object>();
             credentials.put("uri", dbURL);
+            logger.info("createServiceInstanceBinding: " + dbURL );
             return new CreateServiceInstanceAppBindingResponse().withCredentials(credentials);
 
         } catch (Exception e) {
