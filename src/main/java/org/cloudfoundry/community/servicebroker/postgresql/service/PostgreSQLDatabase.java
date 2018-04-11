@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
+import java.net.URI;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.util.Collections;
@@ -216,19 +217,22 @@ public class PostgreSQLDatabase {
         //executeUpdate("ALTER DEFAULT PRIVILEGES FOR ROLE \""+serviceInstanceId+"\" IN SCHEMA public GRANT ALL ON TABLES TO \"" + bindingId + "\"");
         //executeUpdate("ALTER DEFAULT PRIVILEGES FOR ROLE \""+serviceInstanceId+"\" IN SCHEMA public GRANT ALL ON SEQUENCES TO \"" + bindingId + "\"");
         //executeUpdate("ALTER DEFAULT PRIVILEGES FOR ROLE \""+serviceInstanceId+"\" IN SCHEMA public GRANT ALL ON FUNCTIONS TO \"" + bindingId + "\"");
-
+        String s_uri = jdbcTemplate.getDataSource().getConnection().getMetaData().getURL().replace("jdbc:postgresql://", "").split("/")[0];
         // Support multi-proxy
-        String uri = jdbcTemplate.getDataSource().getConnection().getMetaData().getURL().replace("jdbc:postgresql://", "").split("/")[0];
-        String dbURL = String.format("postgres://%s:%s@%s/%s",serviceInstanceId, findServiceInstance(serviceInstanceId).getCredentials(), uri , serviceInstanceId);
-        /*
-        String dbURL = String.format("postgres://%s:%s@%s:%d/%s",
-                // hack for multibinding
-        		serviceInstanceId,
-        		findServiceInstance(serviceInstanceId).getCredentials(),
-        		//bindingId, passwd,
-                uri.getHost(), uri.getPort() == -1 ? 5432 : uri.getPort(), serviceInstanceId);
-        
-        */
+        String dbURL="";
+        if (s_uri.contains(",")){
+        	dbURL = String.format("postgres://%s:%s@%s/%s",serviceInstanceId, findServiceInstance(serviceInstanceId).getCredentials(), s_uri , serviceInstanceId);
+        }else{
+        	
+        	URI uri = new URI(jdbcTemplate.getDataSource().getConnection().getMetaData().getURL().replace("jdbc:", ""));
+            dbURL = String.format("postgres://%s:%s@%s:%d/%s",
+                    // hack for multibinding
+            		serviceInstanceId,
+            		findServiceInstance(serviceInstanceId).getCredentials(),
+            		//bindingId, passwd,
+                    uri.getHost(), uri.getPort() == -1 ? 5432 : uri.getPort(), serviceInstanceId);        	
+        }
+
         return dbURL;
     }
 
