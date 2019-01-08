@@ -68,7 +68,7 @@ public class PostgreSQLServiceInstanceService implements ServiceInstanceService 
         } catch (Exception e){
             logger.error("error creating service instance: ",e);
         }
-        return new CreateServiceInstanceResponse();
+        return new CreateServiceInstanceResponse().withDashboardUrl("");
     }
 
     @Override

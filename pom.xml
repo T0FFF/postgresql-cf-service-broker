@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.mendix.broker</groupId>
     <artifactId>postgresql-cf-service-broker</artifactId>
-    <version>3.0.2-SNAPSHOT</version>
+    <version>3.0.3-SNAPSHOT</version>
 
     <properties>
         <start-class>org.cloudfoundry.community.servicebroker.postgresql.Application</start-class>
